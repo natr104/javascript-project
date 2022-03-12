@@ -68,18 +68,18 @@ function renderVillagerModal(villager){
                 <li><b>Catchphrase:</b> "${villager['catch-phrase']}"</li>
                 <li><b>Saying:</b> "${villager.saying}"</li>
             </ul>
-            <i id="add-favourite" class="fa fa-heart-o"></i>
+            <span title="Add favourite" id="add-favourite" class="fa fa-heart-o"></span>
         </div>`;   
 }
 function toggleHeart(element) {
     if (element.className === "fa fa-heart-o") {
         element.classList.add("fa-heart");
         element.classList.remove("fa-heart-o");
-        alert("Added favourite");
+        //alert("Added favourite");
     } else if (element.className === "fa fa-heart") {
         element.classList.add("fa-heart-o");
         element.classList.remove("fa-heart");
-        alert("Removed favourite");
+        //alert("Removed favourite");
     }
 }
 
@@ -98,35 +98,49 @@ const getVillager = async id => {
         console.error(error);
     }
 }
+async function getVillagers() {   
+    try {
+        const response = await fetch(`${defaultURL}`);
+        const villager = await response.json();
+        createVillagerCard(villager);
+    } catch (error) {
+        console.error(error);
+    }
+}
 
-fetchVillagers();
+
+
+getVillagers();
 
 function createVillagerCard(villager) {
     let html = "";
-    html += renderVillagerCard(villager);
-    villagerListSection.innerHTML += html;
+    for (const x in villager) {
+        html += renderVillagerCard(villager[x]);
+    }
+    villagerListSection.innerHTML = html;
 }
 
-function renderVillagerCard({id, name, icon_uri}) {
-    const villagerName = name['name-USen'];
+function renderVillagerCard(villager) {
+    console.log(villager);
+    const villagerName = villager['name']['name-USen'];
     
     return `
         <div
             class="villager-card"
             villager-name='${villagerName}'
-            villager-id='${id}'
+            villager-id='${villager.id}'
         >
             <h2
                 class="villager-name"
                 villager-name='${villagerName}'
-                villager-id='${id}'
+                villager-id='${villager.id}'
             >
                 ${villagerName}
             </h2>
             <img
-                src='${icon_uri}'
+                src='${villager.icon_uri}'
                 villager-name='${villagerName}'
-                villager-id='${id}'
+                villager-id='${villager.id}'
             />
         </div>
     `;
