@@ -4,18 +4,31 @@ const defaultURL = 'https://acnhapi.com/v1/villagers/';
 
 let villagerQuantity = 10;
 
-window.onclick = (event) => {
+window.onclick = event => {
     if (event.target === modal) {
-        modal.classList.toggle("hidden") //hides modal if window clicked outside the modal
-        modal.innerHTML = "";  //clears html so old data is not still there while fetching next villager clicked
+        clearModal(modal);
     }
 }
+
+const clearModal = modal => {
+    modal.classList.toggle("hidden"); //hides modal if window clicked outside the modal
+    modal.innerHTML = "";  //clears html so old data is not still there while fetching next villager clicked
+}
+
+modal.addEventListener("click", (event) => {
+    const trigger = event.target;
+    if (trigger.id === "close") {
+        clearModal(modal);
+    } else if (trigger.id === "add-favourite") {
+        toggleHeart(trigger);
+    }
+})
 
 villagerListSection.addEventListener("click", (event) => {
     const trigger = event.target;
     if (trigger.className === "villager-card" || trigger.parentNode.className === "villager-card") {
         //trigger modal
-        modal.classList.toggle("hidden")
+        modal.classList.toggle("hidden");
         //populate with villager details
         const id = event.target.getAttribute('villager-id');
         populateVillagerModal(id);
@@ -44,6 +57,7 @@ function renderVillagerModal(villager){
     return `
         <div class="modal-content">
             <h2>${villagerName}</h2>
+            <i class="fa fa-times" id="close"></i>
             <img src='${villager.image_uri}'/>
             <ul class="modal-list">
                 <li><b>Species:</b> ${villager.species}</li>
@@ -54,7 +68,19 @@ function renderVillagerModal(villager){
                 <li><b>Catchphrase:</b> "${villager['catch-phrase']}"</li>
                 <li><b>Saying:</b> "${villager.saying}"</li>
             </ul>
+            <i id="add-favourite" class="fa fa-heart-o"></i>
         </div>`;   
+}
+function toggleHeart(element) {
+    if (element.className === "fa fa-heart-o") {
+        element.classList.add("fa-heart");
+        element.classList.remove("fa-heart-o");
+        alert("Added favourite");
+    } else if (element.className === "fa fa-heart") {
+        element.classList.add("fa-heart-o");
+        element.classList.remove("fa-heart");
+        alert("Removed favourite");
+    }
 }
 
 const fetchVillagers = async () => {
@@ -103,6 +129,6 @@ function renderVillagerCard({id, name, icon_uri}) {
                 villager-id='${id}'
             />
         </div>
-    `
+    `;
 }
 
