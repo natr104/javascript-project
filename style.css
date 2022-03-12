@@ -1,8 +1,8 @@
 section#villager-list {
     display: flex;
     flex-wrap: wrap;
+    justify-content: center;
 }
-
 ul {
     list-style-type: none;
 }
@@ -21,14 +21,13 @@ ul {
 }
 
 div.villager-card {
-    background-color: aqua;
-    margin: 1em;
+    background-color: 	#c48d3f;
+    font-size: 20px;
+    margin: 10px;
     text-align: center;
     min-width: 200px;
     min-height: 200px;
     /* max-width: 400px; */
-    flex-grow: 1;
-    flex-basis: auto;
 }
 
 div.hidden {

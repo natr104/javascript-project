@@ -1,8 +1,10 @@
 const villagerListSection = document.querySelector('section#villager-list');
 const modal = document.querySelector('div#modal');
 const defaultURL = 'https://acnhapi.com/v1/villagers/';
+const viewMoreButton = document.querySelector('button#view-more');
+const topButton = document.querySelector('button#back-to-top');
 
-let villagerQuantity = 10;
+let villagerLimit = 10;
 
 window.onclick = event => {
     if (event.target === modal) {
@@ -33,6 +35,16 @@ villagerListSection.addEventListener("click", (event) => {
         const id = event.target.getAttribute('villager-id');
         populateVillagerModal(id);
     }
+})
+
+viewMoreButton.addEventListener("click", () => {
+    villagerLimit += 10;
+    getVillagers();
+})
+
+topButton.addEventListener("click", () => {
+    document.body.scrollTop = 0;
+    document.documentElement.scrollTop = 0;
 })
 
 const populateVillagerModal = async id => {
@@ -83,21 +95,21 @@ function toggleHeart(element) {
     }
 }
 
-const fetchVillagers = async () => {
-    for(let i=1; i <= villagerQuantity; i++) {
-        await getVillager(i);
-    }
-}
+// const fetchVillagers = async () => {
+//     for(let i=1; i <= villagerQuantity; i++) {
+//         await getVillager(i);
+//     }
+// }
 
-const getVillager = async id => {   
-    try {
-        const response = await fetch(`${defaultURL}${id}`);
-        const villager = await response.json();
-        createVillagerCard(villager);
-    } catch (error) {
-        console.error(error);
-    }
-}
+// const getVillager = async id => {   
+//     try {
+//         const response = await fetch(`${defaultURL}${id}`);
+//         const villager = await response.json();
+//         createVillagerCard(villager);
+//     } catch (error) {
+//         console.error(error);
+//     }
+// }
 async function getVillagers() {   
     try {
         const response = await fetch(`${defaultURL}`);
@@ -108,20 +120,23 @@ async function getVillagers() {
     }
 }
 
-
-
 getVillagers();
 
 function createVillagerCard(villager) {
     let html = "";
+    let i = 0;
     for (const x in villager) {
-        html += renderVillagerCard(villager[x]);
-    }
+        if (i<villagerLimit) {
+            html += renderVillagerCard(villager[x]);
+        } else {
+            break;
+        }
+        i++;
+    }  
     villagerListSection.innerHTML = html;
 }
 
 function renderVillagerCard(villager) {
-    console.log(villager);
     const villagerName = villager['name']['name-USen'];
     
     return `
