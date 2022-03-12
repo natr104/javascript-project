@@ -1,13 +1,13 @@
 const villagerListSection = document.querySelector('section#villager-list');
-const modal = document.querySelector('div.modal');
+const modal = document.querySelector('div#modal');
 const defaultURL = 'https://acnhapi.com/v1/villagers/';
 
 let villagerQuantity = 10;
 
 window.onclick = (event) => {
     if (event.target === modal) {
-        modal.style.display = "none";
-        modal.innerHTML = "";
+        modal.classList.toggle("hidden") //hides modal if window clicked outside the modal
+        modal.innerHTML = "";  //clears html so old data is not still there while fetching next villager clicked
     }
 }
 
@@ -15,7 +15,7 @@ villagerListSection.addEventListener("click", (event) => {
     const trigger = event.target;
     if (trigger.className === "villager-card" || trigger.parentNode.className === "villager-card") {
         //trigger modal
-        modal.style.display = "block";
+        modal.classList.toggle("hidden")
         //populate with villager details
         const id = event.target.getAttribute('villager-id');
         populateVillagerModal(id);
@@ -54,8 +54,7 @@ function renderVillagerModal(villager){
                 <li><b>Catchphrase:</b> "${villager['catch-phrase']}"</li>
                 <li><b>Saying:</b> "${villager.saying}"</li>
             </ul>
-        </div>`;
-    
+        </div>`;   
 }
 
 const fetchVillagers = async () => {

@@ -6,8 +6,10 @@ div.villager-card {
     background-color: aqua;
     margin: 1em;
 }
-div.modal {
+div.hidden {
     display: none;
+}
+div#modal {
     position: fixed;
     z-index: 1; 
     left: 0;
