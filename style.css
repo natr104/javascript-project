@@ -5,8 +5,18 @@ section#villager-list {
 }
 ul {
     list-style-type: none;
+    padding: 0;
+    margin: 0;
 }
-
+h1 {
+    font-family: 'Rokkitt', serif;
+    font-size: 36pt;
+}
+.villager-img {
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
 .fa {
     font-size: 50px;
     cursor: pointer;
@@ -14,6 +24,9 @@ ul {
 }
 .fa-heart {
     color: red;
+}
+.fa-times {
+    float: right;
 }
 
 .fa:hover {
