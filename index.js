@@ -69,7 +69,7 @@ function renderVillagerModal(villager){
     return `
         <div class="modal-content">
             <span title="Close" class="fa fa-times" id="close"></span>
-            <h2>${villagerName}</h2>
+            <h2 class="modal-name">${villagerName}</h2>
             <img class="villager-img" src='${villager.image_uri}'/>
             <ul class="modal-list">
                 <li><b>Species:</b> ${villager.species}</li>
