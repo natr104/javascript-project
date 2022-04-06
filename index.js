@@ -1,10 +1,12 @@
 const villagerListSection = document.querySelector('section#villager-list');
 const modal = document.querySelector('div#modal');
+const sort = document.querySelector('select#sort')
 const defaultURL = 'https://acnhapi.com/v1/villagers/';
 const viewMoreButton = document.querySelector('button#view-more');
 const topButton = document.querySelector('button#back-to-top');
 
 let villagerLimit = 10;
+let allVillagers = [];
 
 window.onclick = event => {
     if (event.target === modal) {
@@ -16,6 +18,14 @@ const clearModal = modal => {
     modal.classList.toggle("hidden"); //hides modal if window clicked outside the modal
     modal.innerHTML = "";  //clears html so old data is not still there while fetching next villager clicked
 }
+sort.addEventListener("click", (event)=> {
+    const trigger = event.target
+    console.log(trigger.value)
+    if (trigger.value === "ascending") {
+        sortVillagers()
+        createVillagerCard()
+    }
+})
 
 modal.addEventListener("click", (event) => {
     const trigger = event.target;
@@ -39,7 +49,7 @@ villagerListSection.addEventListener("click", (event) => {
 
 viewMoreButton.addEventListener("click", () => {
     villagerLimit += 10;
-    getVillagers();
+    createVillagerCard(allVillagers);
 })
 
 topButton.addEventListener("click", () => {
@@ -95,26 +105,15 @@ function toggleHeart(element) {
     }
 }
 
-// const fetchVillagers = async () => {
-//     for(let i=1; i <= villagerQuantity; i++) {
-//         await getVillager(i);
-//     }
-// }
 
-// const getVillager = async id => {   
-//     try {
-//         const response = await fetch(`${defaultURL}${id}`);
-//         const villager = await response.json();
-//         createVillagerCard(villager);
-//     } catch (error) {
-//         console.error(error);
-//     }
-// }
 async function getVillagers() {   
     try {
         const response = await fetch(`${defaultURL}`);
-        const villager = await response.json();
-        createVillagerCard(villager);
+        const villagers = await response.json();
+        for (const x in villagers) {
+            allVillagers.push(villagers[x]) 
+        }
+        // createVillagerCard(allVillagers);
     } catch (error) {
         console.error(error);
     }
@@ -122,12 +121,12 @@ async function getVillagers() {
 
 getVillagers();
 
-function createVillagerCard(villager) {
+function createVillagerCard() {
     let html = "";
     let i = 0;
-    for (const x in villager) {
+    for (const x of allVillagers) {
         if (i<villagerLimit) {
-            html += renderVillagerCard(villager[x]);
+            html += renderVillagerCard(x);
         } else {
             break;
         }
@@ -161,3 +160,21 @@ function renderVillagerCard(villager) {
     `;
 }
 
+function sortVillagers() {
+    //sort
+    const sortedArray = allVillagers.sort(compareNames)
+    allVillagers = sortedArray    
+}
+
+function compareNames(a, b) {
+    const nameA = a['name']['name-USen'].toUpperCase()
+    const nameB = b['name']['name-USen'].toUpperCase()
+
+    let comparison = 0
+    if (nameA > nameB) {
+        comparison = 1
+    } else if (nameA < nameB) {
+        comparison = -1
+    }
+    return comparison
+}
